@@ -15,7 +15,13 @@ class StudentController extends Controller
     public function index()
     {
         //
-        return Students::all();
+        $student = Students::all();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Students retrieved successfully',
+            'data' => $student
+        ], 201);
     }
 
     /**
@@ -52,7 +58,20 @@ class StudentController extends Controller
     public function show($id)
     {
         //
-        return Students::findorFail($id);
+       $student = Students::find($id);
+       if($student){
+            return response()->json([
+                'status' => true,
+                'message' => 'Student found successfully',
+                'data' => $student
+            ], 201);
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => 'Student not found',
+                'data' => null
+            ],404);
+        }
     }
 
     /**
@@ -65,13 +84,31 @@ class StudentController extends Controller
     public function update(Request $request, $id)
     {
         //
-        return Students::find($id)->update([
-            "fullname" => $request->fullname,
-            "program" => $request->program,
-            "age" => $request->age,
-            "email" => $request->email,
-            "address" => $request->address
+        $data = $request->validate([
+            "fullname" => 'nullable|string|max:150',
+            "program" => 'nullable|string|max:150',
+            "age" => 'nullable|integer|min:1|max:150',
+            "email" => 'nullable|string|max:150',
+            "address" => 'nullable|string|max:150',
         ]);
+
+        $student = Students::find($id);
+
+        if($student){
+            $student->update($data);
+            return response()->json([
+                'status' => true,
+                'message' => 'Student found successfully',
+                'data' => $student
+            ], 201);
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => 'Student not found',
+                'data' => null
+            ],404);
+        }
+        
     }
 
     /**
@@ -83,6 +120,23 @@ class StudentController extends Controller
     public function destroy($id)
     {
         //
-        return Students::find($id)->delete();
+
+
+        $student = Students::find($id);
+
+        if($student){
+            $student->delete();
+            return response()->json([
+                'status' => true,
+                'message' => 'Student deleted successfully',
+                'data' => null
+            ]);
+        }else{
+            return response()->json([
+                'status' => false,
+                'message' => 'Student not found',
+                'data' => null
+            ], 404);
+        }
     }
 }
