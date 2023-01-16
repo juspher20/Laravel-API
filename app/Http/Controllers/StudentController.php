@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Students;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -15,8 +15,7 @@ class StudentController extends Controller
     public function index()
     {
         //
-        $student = Students::all();
-
+        $student = Student::all();
         return response()->json([
             'status' => true,
             'message' => 'Students retrieved successfully',
@@ -40,7 +39,7 @@ class StudentController extends Controller
             "email" => 'required|string|max:150',
             "address" => 'required|string|max:150',
         ]);
-        $student = Students::create($data);
+        $student = Student::create($data);
 
         return response()->json([
             'status' => true,
@@ -58,7 +57,7 @@ class StudentController extends Controller
     public function show($id)
     {
         //
-       $student = Students::find($id);
+       $student = Student::find($id);
        if($student){
             return response()->json([
                 'status' => true,
@@ -92,7 +91,7 @@ class StudentController extends Controller
             "address" => 'nullable|string|max:150',
         ]);
 
-        $student = Students::find($id);
+        $student = Student::find($id);
 
         if($student){
             $student->update($data);
@@ -121,8 +120,7 @@ class StudentController extends Controller
     {
         //
 
-
-        $student = Students::find($id);
+        $student = Student::find($id);
 
         if($student){
             $student->delete();
